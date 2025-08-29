@@ -22,31 +22,33 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <>
         <Header />
-        
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center space-y-6">
-            <div className="text-gray-400">
-              <ShoppingBag className="w-24 h-24 mx-auto" />
+        <div className="min-h-screen bg-gray-50 flex flex-col">
+          <div className="flex-1 flex items-center justify-center">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+              <div className="text-center space-y-6">
+                <div className="text-gray-400">
+                  <ShoppingBag className="w-24 h-24 mx-auto" />
+                </div>
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-bold text-gray-900">Your cart is empty</h1>
+                  <p className="text-gray-600">
+                    Looks like you haven't added any meals to your cart yet
+                  </p>
+                </div>
+                <Button size="lg" asChild className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
+                  <Link href="/meals">
+                    Browse Meals
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+              </div>
             </div>
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold text-gray-900">Your cart is empty</h1>
-              <p className="text-gray-600">
-                Looks like you haven't added any meals to your cart yet
-              </p>
-            </div>
-            <Button size="lg" asChild className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
-              <Link href="/meals">
-                Browse Meals
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
           </div>
+          <Footer />
         </div>
-
-        <Footer />
-      </div>
+      </>
     )
   }
 

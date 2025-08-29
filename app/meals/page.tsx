@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MealCard } from '@/components/meals/MealCard'
@@ -12,114 +12,7 @@ import { Slider } from '@/components/ui/slider'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Search, Filter, X } from 'lucide-react'
 
-// Sample meals data
-const meals = [
-  {
-    id: '1',
-    name: 'Grilled Salmon with Quinoa',
-    description: 'Fresh Atlantic salmon with organic quinoa and seasonal vegetables',
-    image: 'https://images.pexels.com/photos/1199960/pexels-photo-1199960.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 24.99,
-    calories: 420,
-    protein: 35,
-    carbs: 25,
-    fat: 18,
-    category: 'DINNER',
-    available: true
-  },
-  {
-    id: '2',
-    name: 'Mediterranean Bowl',
-    description: 'Chickpeas, feta, olives, and fresh herbs with olive oil dressing',
-    image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 18.99,
-    calories: 380,
-    protein: 15,
-    carbs: 45,
-    fat: 16,
-    category: 'VEGETARIAN',
-    available: true
-  },
-  {
-    id: '3',
-    name: 'Protein Power Breakfast',
-    description: 'Scrambled eggs, turkey sausage, avocado, and sweet potato hash',
-    image: 'https://images.pexels.com/photos/566566/pexels-photo-566566.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 16.99,
-    calories: 450,
-    protein: 28,
-    carbs: 35,
-    fat: 22,
-    category: 'BREAKFAST',
-    available: true
-  },
-  {
-    id: '4',
-    name: 'Asian Stir-Fry',
-    description: 'Teriyaki chicken with mixed vegetables and jasmine rice',
-    image: 'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 22.99,
-    calories: 390,
-    protein: 30,
-    carbs: 42,
-    fat: 12,
-    category: 'LUNCH',
-    available: true
-  },
-  {
-    id: '5',
-    name: 'Keto Beef Bowl',
-    description: 'Grass-fed beef with cauliflower rice and avocado cream',
-    image: 'https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 26.99,
-    calories: 520,
-    protein: 40,
-    carbs: 8,
-    fat: 38,
-    category: 'KETO',
-    available: true
-  },
-  {
-    id: '6',
-    name: 'Vegan Buddha Bowl',
-    description: 'Mixed greens, quinoa, roasted vegetables, and tahini dressing',
-    image: 'https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 19.99,
-    calories: 350,
-    protein: 12,
-    carbs: 52,
-    fat: 14,
-    category: 'VEGAN',
-    available: true
-  },
-  {
-    id: '7',
-    name: 'Turkey Meatballs',
-    description: 'Lean turkey meatballs with marinara sauce and zucchini noodles',
-    image: 'https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 21.99,
-    calories: 380,
-    protein: 32,
-    carbs: 28,
-    fat: 16,
-    category: 'PROTEIN',
-    available: false
-  },
-  {
-    id: '8',
-    name: 'Chocolate Protein Mousse',
-    description: 'Rich chocolate mousse made with protein powder and avocado',
-    image: 'https://images.pexels.com/photos/1640778/pexels-photo-1640778.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 12.99,
-    calories: 280,
-    protein: 20,
-    carbs: 18,
-    fat: 16,
-    category: 'DESSERT',
-    available: true
-  }
-]
-
+// Sample categories data
 const categories = [
   'All',
   'BREAKFAST',
@@ -136,10 +29,22 @@ const categories = [
 export default function MealsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
-  const [priceRange, setPriceRange] = useState([0, 50])
-  const [calorieRange, setCalorieRange] = useState([0, 600])
+  const [priceRange, setPriceRange] = useState([0, 1000])
+  const [calorieRange, setCalorieRange] = useState([0, 2000])
   const [sortBy, setSortBy] = useState('name')
   const [showFilters, setShowFilters] = useState(false)
+  const [meals, setMeals] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/meals')
+      .then(res => res.json())
+      .then(data => {
+        setMeals(data)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   const filteredMeals = useMemo(() => {
     let filtered = meals.filter(meal => {
@@ -169,21 +74,21 @@ export default function MealsPage() {
     })
 
     return filtered
-  }, [searchTerm, selectedCategory, priceRange, calorieRange, sortBy])
+  }, [searchTerm, selectedCategory, priceRange, calorieRange, sortBy, meals])
 
   const clearFilters = () => {
     setSearchTerm('')
     setSelectedCategory('All')
-    setPriceRange([0, 50])
-    setCalorieRange([0, 600])
+    setPriceRange([0, 1000])
+    setCalorieRange([0, 2000])
     setSortBy('name')
   }
 
   const activeFiltersCount = [
     searchTerm,
     selectedCategory !== 'All',
-    priceRange[0] > 0 || priceRange[1] < 50,
-    calorieRange[0] > 0 || calorieRange[1] < 600
+    priceRange[0] > 0 || priceRange[1] < 1000,
+    calorieRange[0] > 0 || calorieRange[1] < 2000
   ].filter(Boolean).length
 
   return (
@@ -261,7 +166,7 @@ export default function MealsPage() {
                     <Slider
                       value={priceRange}
                       onValueChange={setPriceRange}
-                      max={50}
+                      max={1000}
                       step={1}
                       className="w-full"
                     />
@@ -279,7 +184,7 @@ export default function MealsPage() {
                     <Slider
                       value={calorieRange}
                       onValueChange={setCalorieRange}
-                      max={600}
+                      max={2000}
                       step={10}
                       className="w-full"
                     />
@@ -334,7 +239,9 @@ export default function MealsPage() {
             </div>
 
             {/* Meals Grid */}
-            {filteredMeals.length > 0 ? (
+            {loading ? (
+              <div className="text-center text-gray-500">Loading meals...</div>
+            ) : filteredMeals.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredMeals.map((meal) => (
                   <MealCard key={meal.id} {...meal} />

@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -68,64 +69,66 @@ export function MealCard({
 
   return (
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col">
-      <div className="relative overflow-hidden">
-        <Image
-          src={image}
-          alt={name}
-          width={400}
-          height={300}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute top-3 left-3">
-          <Badge className={`${getCategoryColor(category)} text-xs font-medium`}>
-            {category.charAt(0) + category.slice(1).toLowerCase()}
-          </Badge>
-        </div>
-        {!available && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <Badge variant="secondary" className="bg-white text-gray-800">
-              Out of Stock
+      <Link href={`/meals/${id}`} className="flex flex-col flex-grow">
+        <div className="relative overflow-hidden">
+          <Image
+            src={image}
+            alt={name}
+            width={400}
+            height={300}
+            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          <div className="absolute top-3 left-3">
+            <Badge className={`${getCategoryColor(category)} text-xs font-medium`}>
+              {category.charAt(0) + category.slice(1).toLowerCase()}
             </Badge>
           </div>
-        )}
-      </div>
-
-      <CardContent className="p-4 flex-grow">
-        <div className="space-y-3">
-          <div>
-            <h3 className="font-semibold text-lg text-gray-900 line-clamp-1">{name}</h3>
-            <p className="text-gray-600 text-sm line-clamp-2 mt-1">{description}</p>
-          </div>
-
-          <div className="flex items-center justify-between text-sm text-gray-600">
-            <div className="flex items-center space-x-1">
-              <Zap className="w-4 h-4 text-yellow-500" />
-              <span>{calories} cal</span>
+          {!available && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <Badge variant="secondary" className="bg-white text-gray-800">
+                Out of Stock
+              </Badge>
             </div>
-            <div className="flex items-center space-x-1">
-              <User className="w-4 h-4 text-green-500" />
-              <span>1 serving</span>
-            </div>
-          </div>
-
-          <Separator />
-
-          <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
-            <div className="text-center">
-              <div className="font-medium text-gray-900">{protein}g</div>
-              <div>Protein</div>
-            </div>
-            <div className="text-center">
-              <div className="font-medium text-gray-900">{carbs}g</div>
-              <div>Carbs</div>
-            </div>
-            <div className="text-center">
-              <div className="font-medium text-gray-900">{fat}g</div>
-              <div>Fat</div>
-            </div>
-          </div>
+          )}
         </div>
-      </CardContent>
+
+        <CardContent className="p-4 flex-grow">
+          <div className="space-y-3">
+            <div>
+              <h3 className="font-semibold text-lg text-gray-900 line-clamp-1">{name}</h3>
+              <p className="text-gray-600 text-sm line-clamp-2 mt-1">{description}</p>
+            </div>
+
+            <div className="flex items-center justify-between text-sm text-gray-600">
+              <div className="flex items-center space-x-1">
+                <Zap className="w-4 h-4 text-yellow-500" />
+                <span>{calories} cal</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <User className="w-4 h-4 text-green-500" />
+                <span>1 serving</span>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
+              <div className="text-center">
+                <div className="font-medium text-gray-900">{protein}g</div>
+                <div>Protein</div>
+              </div>
+              <div className="text-center">
+                <div className="font-medium text-gray-900">{carbs}g</div>
+                <div>Carbs</div>
+              </div>
+              <div className="text-center">
+                <div className="font-medium text-gray-900">{fat}g</div>
+                <div>Fat</div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Link>
 
       <CardFooter className="p-4 pt-0">
         <div className="w-full flex items-center justify-between">
